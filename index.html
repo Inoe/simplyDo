@@ -1,0 +1,61 @@
+<!doctype HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <title>simplyDo</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="head" class="headroom">
+            <span class="menu">&#9776;&#xFE0E;</span>
+            <span class="appname">simplyDo</span>
+        </div>
+        <div id="preContent">
+            <!-- Fixing rendering problem in Android. In desktop, simply giving <content> 60px top-padding displays well. -->
+            <span class="menu">&#9776;&#xFE0E;</span>
+            <span class="appname">simplyDo</span>
+        </div>
+        <content>
+            <div id="categories">
+                <div class="cat" id="cat-all" style="background: #c0504d; border-right: 1px solid #953735;">&#9898;&#xFE0E;</div>
+                <div class="addCat">+</div>
+            </div>
+            <div class="header">
+                <span class="catTitle">All Tasks</span>
+                <input type="text" id="task-home" class="task" placeholder="I want to ..."><span id="add">+</span>
+            </div>
+            <div id="todos"></div>
+            
+            <!-- Modal Dialog for Add Categories -->
+            <div id="addCatDialog" class="addCat-modal">
+                <div class="addCat-content">
+                    <span class="closeModal">&#10005;&#xFE0E;</span>
+                    <div class="addCat-header"></div>
+                    <div class="addCat-wrapper"></div>
+                </div>
+            </div>
+        </content>
+        
+        <div id="sideWrap">
+            <div id="sideMenu">
+                <div id="sideHead">
+                    <span class="sideTitle">Menu</span>
+                    <span class="sideButton">&#9776;&#xFE0E;</span>
+                </div>
+                <ul>
+                    <li class="menuList" id="style_set">Appearance</li>
+                    <li class="menuList" id="manage_cat">Manage Categories</li>
+                    <li class="menuList" id="clear_tasks">Clear All Tasks</li>
+                </ul>
+                <ul>
+                    <li class="menuList" id="help">Help</li>
+                    <li class="menuList" id="about">About</li>
+                </ul>
+            </div>
+        </div>
+        
+        <script src="headroom.min.js"></script>
+        <script src="Sortable.min.js"></script>
+        <script src="todo.js"></script>
+    </body>
+</html>

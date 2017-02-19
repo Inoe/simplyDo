@@ -1,0 +1,572 @@
+@font-face {
+    font-family: 'emojiFont';
+    src: url('./emoji.ttf'); /* ?-td2xif */
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    box-sizing: border-box;
+    /* rather than only the draggables, make everything unselectable - input texts will still be selectable */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body, input {
+    font-family: Ubuntu, Roboto, Verdana;
+    margin: 0;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    text-decoration: none;
+    color: #d41;
+}
+a: hover {
+    color: #626;
+}
+
+#head {
+    background: #c0504d;
+    color: #fff;
+    font-size: 24px;
+    padding: 16px;
+    border-bottom: 1px solid #953735;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+.headroom {
+    will-change: transform;
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}
+
+.menu {
+    float: left;
+    cursor: pointer;
+}
+
+.appname {
+    float: right;
+}
+
+#preContent { /* To use with headroom */
+    width: 100%;
+    background: #c0504d;
+    color: #c0504d;
+    font-size: 24px;
+    padding: 16px;
+    border-bottom: 1px solid #953735;
+    overflow: auto;
+}
+
+#head:after, #sideHead:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#categories {
+    background: #953735;
+    font-size: 30px;
+    color: #fff;
+    overflow: auto;
+    white-space: nowrap;
+    line-height: 30px;
+}
+
+.cat {
+    font-family: 'emojiFont';
+    min-width: 2.4em;
+    padding: 13px 10px;
+    text-align: center;
+    display: table-cell; /* float: left; */
+    cursor: pointer;
+}
+
+.addCat {
+    padding: 0 16px; /* kenapa top/bottom ga sama kaya .cat? karena span-nya di-rotate */
+    color: #d99694;
+    display: table-cell; /* float: left */
+    cursor: pointer;
+}
+.addCat span {
+    overflow: auto;
+    font-size: 24px;
+    display: inline-block;
+    transform: rotate(45deg); /* awalnya kan tanpa span dan isinya +, cuma karena + lebih pendek dari karakter lain, jadi ga pas, ganti multiplication sign di-rotate */
+}
+
+#categories:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.catTitle {
+    font-weight: bold;
+    display: block;
+    margin: 10px 0;
+}
+
+.header {
+    background: #c0504d;
+    padding: 20px 40px;
+    color: #fff;
+    text-align: center;
+}
+
+/* Clear floats after the header */
+.header:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+input {
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+input.task {
+    width: 75%;
+    float: left;
+}
+
+#add {
+    padding: 10px;
+    margin: 10px 0;
+    width: 25%;
+    background: #d9d9d9;
+    color: #555;
+    float: left;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#add:hover {
+    background-color: #bbb;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    cursor: pointer;
+    position: relative;
+    font-size: 18px;
+    padding: 12px 16px;
+    transition: 0.2s;
+    overflow: hidden;
+}
+li:hover {
+    background: #eee;
+}
+
+#todos li {
+    background: #eee;
+    padding: 12px 8px 12px 40px;
+}
+/* set all odd list items to a different color (zebra-stripes) */
+#todos li:nth-child(odd) {
+    background: #f9f9f9;
+}
+/* darker background color on hover */
+#todos li:hover {
+    background: #ddd;
+}
+
+/* When clicked on, add a background color and strike out text */
+/* Uses [class^="checked"] instead of the usual li.checked because the classes would be checked-*CategoryID* */
+#todos li[class^="checked"] {
+    background: #aaa; /* #888 terlalu distracting, yak untuk done stuffs */
+    color: #fff;
+    /* text-decoration: line-through; */ /* salah satu aja. di .done aja, yak. */
+}
+
+/* Add a "checked" mark when clicked on */
+#todos li[class^="checked"]::before {
+    content: '';
+    position: absolute;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    top: 12px; /* KALO padding-top/bottom todos li diubah jadi 8px, ini cocoknya 10px */
+    left: 16px;
+    transform: rotate(45deg);
+    height: 15px;
+    width: 7px;
+}
+
+.todo, .done {
+    margin-right: 32px;
+    float: left;
+}
+.done {
+    text-decoration: line-through;
+}
+
+#todos li.catMng {
+    padding: 12px 5.5em 12px 2.75em;
+}
+.catEdit {
+    position: absolute;
+    padding: 12px 16px;
+    top: 0;
+    left: 0;
+    float: left;
+}
+.catEmpty, .catEmpty2 {
+    position: absolute;
+    top: 0;
+    right: 2.5em;
+    padding: 12px 16px;
+    float: right;
+}
+.catEmpty2 {
+    color: #bbb;
+}
+.catEdit:hover {
+    background: #20a423; /* alternatif kalo mau biru #3182b0 */
+    color: white;
+}
+.catEmpty:hover {
+    background: #ed9f24;
+    color: white;
+}
+
+/* Style the close button */
+.erase, .catDel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 12px 16px;
+    float: right;
+}
+
+.erase:hover, .catDel:hover {
+    background-color: #c0504d; /* #f44336 terasa out of place */
+    color: white;
+}
+
+.addCat-modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0,0,0,0.5); /* hitam transparan */
+}
+
+.addCat-content {
+    background: #fefefe;
+    margin: 3em auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 85%;
+    position: relative;
+}
+
+.closeModal {
+    float: right;
+    font-size: 28px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 8px;
+    opacity: 0.3;
+}
+.closeModal:hover, .closeModal:focus {
+    background: #c0504d;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 1;
+}
+
+#addCat-title {
+    text-align: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+#addCat-input {
+    padding: 8px 20px;
+}
+
+.addCat-wrapper {
+    padding: 0 20px 16px 20px;
+}
+
+#catName {
+    width: 90%;
+    background: #ececec;
+    margin: 8px 5%;
+}
+
+.optionTitle {
+    width: 90%;
+    margin: 8px 5%;
+    padding: 10px;
+}
+
+.colorSelect, #iconSelect {
+    width: 90%;
+    margin: 8px 5%;
+    padding: 0 10px 10px 10px;
+}
+
+.colorSelect div {
+    width: 32px;
+    height: 32px;
+    float: left;
+    margin: 2px;
+    cursor: pointer;
+}
+.colorSelect:after, #iconSelect:after, .wrapper:after, #colorSlider input:before {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.ico, #iconPreview {
+    font-family: 'emojiFont';
+    width: 48px;
+    height: 48px;
+    float: left;
+    margin: 2px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 2em;
+    line-height: 48px;
+}
+
+.optionInfo {
+    width: 90%;
+    margin: 8px 5%;
+    padding: 0 10px 10px 10px;
+}
+.sliderInfo, .optionInfo {
+    font-size: small;
+    color: #666;
+}
+#colorSlider, #colorSlider2 {
+    background: #808080;
+    padding: 5%;
+    margin: 16px 0;
+}
+.rgb {
+    float:left;
+}
+#rVal, #gVal, #bVal, #rVal2, #gVal2, #bVal2 {
+    float: right;
+}
+#colorSlider input, #colorSlider2 input {
+    width: 100%;
+}
+
+#advancedOptions, #advancedOptions2 {
+    display: none;
+    width: 90%;
+    margin: 8px 5%;
+    padding: 0 10px 10px 10px;
+}
+
+#showAdvanced, #showAdvanced2 {
+    width: 90%;
+    margin: 0 5% 16px 5%;
+    padding: 16px;
+    position: relative;
+    color: #999;
+    font-size: small;
+    cursor: pointer;
+    overflow: hidden;
+}
+#showAdvanced:hover, #showAdvanced2:hover {
+    background: #ccc;
+}
+#showAdvText, #showAdvText2 {
+    margin-right: 32px;
+    float: left;
+}
+#showAdvButton, #showAdvButton2 {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 12px 16px 12px 16px;
+    float: right;
+}
+
+#addCat-buttons {
+    width: 90%;
+    margin: 0 5%;
+    overflow: auto;
+}
+
+.cancel, .add, .ok, .confirm, .edit {
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 4px 12px;
+    height: 32px;
+    line-height: 24px;
+    margin-left: 12px;
+    float: right;
+}
+.cancel {
+    background: #666;
+}
+.add, .ok, .confirm, .edit {
+    background: #c0504d;
+}
+
+#sideWrap {
+    position: fixed;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: -100%;
+    background: rgba(0,0,0,0.5);
+    overflow: auto;
+}
+#sideMenu {
+    position: fixed;
+    z-index: 4;
+    height: 100%;
+    top: 0;
+    left: -356px;
+    width: 340px;
+    max-width: 80%;
+    background: #fff;
+    transition: 0.5s;
+    box-shadow: 0 0 8px 8px rgba(0,0,0,0.25);
+}
+#sideMenu ul {
+    border-top: 1px solid #ccc;
+}
+#sideHead {
+    font-size: 24px;
+    padding: 16px;
+}
+.sideTitle {
+    float: left;
+}
+.sideButton {
+    float: right;
+    cursor: pointer;
+}
+
+.switchInfo {
+    position: relative;
+    float: left;
+    display: inline-block;
+    line-height: 30px; /* sama ama switch */
+}
+.switch {
+    position: relative;
+    float: right;
+    display: inline-block;
+    width: 52px; /* 60 */
+    height: 30px; /* 34 */
+}
+.switch input {
+    display: none;
+}
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ccc;
+    border-radius: 30px; /* 34 */
+    cursor: pointer;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background: #fff;
+    border-radius: 50%;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.switch input:checked + .slider {
+    background: #2196f3;
+}
+.switch input:checked + .slider:before {
+    -webkit-transform: translateX(22px); /* 26 */
+    -ms-transform: translateX(22px); /* 26 */
+    transform: translateX(22px); /* 26 */
+}
+
+.catMngNotif {
+    padding: 12px 16px;
+    color: #999;
+    text-align: center;
+}
+
+.themeList {
+    position: relative;
+    padding: 12px 8px 12px 40px;
+    cursor: pointer;
+    height: 48px;
+    line-height: 24px;
+}
+div.checked:before {
+    content: '';
+    position: absolute;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    top: 10px;
+    left: 14px;
+    transform: rotate(45deg);
+    height: 15px;
+    width: 7px;
+}
+
+.helpSpan {
+    padding: 4px;
+    border-radius: 8px;
+    color: #fff;
+    line-height: 2em;
+}
+.helpMenu {
+    color: #8d6e63;
+}
+.helpItem {
+    display: block;
+    color: #969696;
+    padding-top: 8px;
+}
